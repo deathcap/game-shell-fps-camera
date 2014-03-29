@@ -13,12 +13,17 @@ var attachCamera = function(shell) {
   shell.bind('move-down', 'down', 'shift');
 
   shell.on('tick', function() {
+    if (!shell.pointerLock) {
+      return;
+    }
+
     if (shell.wasDown('move-left')) {
       camera.position[0] += 1;
     }
     if (shell.wasDown('move-right')) {
       camera.position[0] -= 1;
     }
+    // TODO: option to disable flying
     if (shell.wasDown('move-up')) {
       camera.position[1] -= 1;
     }
@@ -31,6 +36,11 @@ var attachCamera = function(shell) {
     if (shell.wasDown('move-back')) {
       camera.position[2] -= 1;
     }
+
+    // TODO: mouselook
+    var dx = shell.mouseX - shell.prevMouseX;
+    var dy = shell.mouseY - shell.prevMouseY;
+    console.log(shell.mouseX-shell.prevMouseX,shell.mouseY-shell.prevMouseY,shell.pointerLock);
   });
 
   camera.lookAt = function(eye, center, up) { console.log(eye, center, up); }; // TODO: add to basic-camera, as in orbit-camera
