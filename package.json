@@ -1,0 +1,17 @@
+{
+  "name": "game-shell-fps-camera",
+  "description": "",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:deathcap/game-shell-fps-camera.git"
+  },
+  "keywords": [
+    "voxel"
+  ],
+  "dependencies": {
+  },
+  "peerDependencies": {
+  },
+  "license": "MIT"
+}
