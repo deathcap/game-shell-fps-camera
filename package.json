@@ -1,6 +1,6 @@
 {
   "name": "game-shell-fps-camera",
-  "description": "",
+  "description": "first person shooter camera for game-shell",
   "version": "0.0.1",
   "repository": {
     "type": "git",
