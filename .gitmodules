@@ -1,0 +1,4 @@
+[submodule "voxel-mipmap-demo"]
+	path = voxel-mipmap-demo
+	url = https://github.com/deathcap/voxel-mipmap-demo
+	branch = fps
