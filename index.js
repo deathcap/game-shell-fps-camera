@@ -12,6 +12,10 @@ var attachCamera = function(shell) {
   shell.bind('move-up', 'up', 'space');
   shell.bind('move-down', 'down', 'shift');
 
+  var max_dpitch = Math.PI / 2;
+  var max_dyaw = Math.PI / 2;
+  var scale = 0.002;
+
   shell.on('tick', function() {
     if (!shell.pointerLock) {
       return;
@@ -37,10 +41,25 @@ var attachCamera = function(shell) {
       camera.position[2] -= 1;
     }
 
-    // TODO: mouselook
-    var dx = shell.mouseX - shell.prevMouseX;
-    var dy = shell.mouseY - shell.prevMouseY;
-    console.log(shell.mouseX-shell.prevMouseX,shell.mouseY-shell.prevMouseY,shell.pointerLock);
+    // mouselook
+    var dx = shell.prevMouseX - shell.mouseX;
+    var dy = shell.prevMouseY - shell.mouseY;
+    var dt = shell.frameTime;
+    //console.log(dx,dy,dt);
+
+    var dpitch = dy / dt * scale;
+    var dyaw = dx / dt * scale;
+
+    if (dpitch > max_dpitch) dpitch = max_dpitch;
+    if (dpitch < -max_dpitch) dpitch = -max_dpitch;
+    if (dyaw > max_dyaw) dyaw = max_dyaw;
+    if (dyaw < -max_dyaw) dyaw = -max_dyaw;
+
+    //console.log(dpitch,dyaw);
+
+    // TODO: fix unintentional rolling
+    camera.rotateX(dpitch);
+    camera.rotateY(dyaw);
   });
 
   camera.lookAt = function(eye, center, up) { console.log(eye, center, up); }; // TODO: add to basic-camera, as in orbit-camera
