@@ -11,7 +11,7 @@
     "camera"
   ],
   "dependencies": {
-    "basic-camera": "0.0.0"
+    "basic-camera": "git://github.com/deathcap/basic-camera.git#9a29983216ac6f8f198a507c57796f1b951f8b57"
   },
   "license": "MIT"
 }

@@ -7,8 +7,6 @@ Mostly a drop-in replacement for [game-shell-orbit-camera](https://github.com/mi
 using [basic-camera](https://github.com/hughsk/basic-camera) instead of
 [orbit-camera](https://github.com/mikolalysenko/orbit-camera).
 
-Known bug: the scene inadvertently rolls when using mouselook.
-
 ## License
 
 MIT
