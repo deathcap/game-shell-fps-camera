@@ -14,7 +14,7 @@ var attachCamera = function(shell) {
 
   var max_dpitch = Math.PI / 2;
   var max_dyaw = Math.PI / 2;
-  var scale = 0.002;
+  var scale = 0.0002;
 
   shell.on('tick', function() {
     if (!shell.pointerLock) {
@@ -42,8 +42,8 @@ var attachCamera = function(shell) {
     }
 
     // mouselook
-    var dx = shell.prevMouseX - shell.mouseX;
-    var dy = shell.prevMouseY - shell.mouseY;
+    var dx = shell.mouseX - shell.prevMouseX;
+    var dy = shell.mouseY - shell.prevMouseY;
     var dt = shell.frameTime;
     //console.log(dx,dy,dt);
 
