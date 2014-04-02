@@ -1,6 +1,11 @@
 'use strict';
 
+var glm = require('gl-matrix');
+var vec3 = glm.vec3;
+
 var createBasicCamera = require('basic-camera');
+
+var scratch0 = vec3.create();
 
 var attachCamera = function(shell) {
   var camera = createBasicCamera([-22, -14, -48]); 
@@ -11,6 +16,7 @@ var attachCamera = function(shell) {
   shell.bind('move-back', 'back', 'S');
   shell.bind('move-up', 'up', 'space');
   shell.bind('move-down', 'down', 'shift');
+  shell.bind('test', 'R');
 
   var max_dpitch = Math.PI / 2;
   var max_dyaw = Math.PI / 2;
@@ -39,6 +45,10 @@ var attachCamera = function(shell) {
     }
     if (shell.wasDown('move-back')) {
       camera.position[2] -= 1;
+    }
+    if (shell.wasDown('test')) {
+      // TODO: replace move-forward with this, after it works - goes in wrong direction
+      vec3.scaleAndAdd(camera.position, camera.position, camera.cameraVector, 1.0);
     }
 
     // mouselook
