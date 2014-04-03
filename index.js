@@ -6,6 +6,7 @@ var vec3 = glm.vec3;
 var createBasicCamera = require('basic-camera');
 
 var scratch0 = vec3.create();
+var y_axis = vec3.fromValues(0, 1, 0);
 
 var attachCamera = function(shell) {
   var camera = createBasicCamera([-22, -14, -48]); 
@@ -16,23 +17,34 @@ var attachCamera = function(shell) {
   shell.bind('move-back', 'back', 'S');
   shell.bind('move-up', 'up', 'space');
   shell.bind('move-down', 'down', 'shift');
-  shell.bind('test', 'R');
 
   var max_dpitch = Math.PI / 2;
   var max_dyaw = Math.PI / 2;
   var scale = 0.0002;
+  var speed = 1.0;
 
   shell.on('tick', function() {
     if (!shell.pointerLock) {
       return;
     }
 
-    if (shell.wasDown('move-left')) {
-      camera.position[0] += 1;
+    // movement relative to camera
+    if (shell.wasDown('move-forward')) {
+      vec3.scaleAndAdd(camera.position, camera.position, camera.cameraVector, speed);
+    }
+    if (shell.wasDown('move-back')) {
+      vec3.scaleAndAdd(camera.position, camera.position, camera.cameraVector, -speed);
     }
     if (shell.wasDown('move-right')) {
-      camera.position[0] -= 1;
+      vec3.cross(scratch0, camera.cameraVector, y_axis);
+      vec3.scaleAndAdd(camera.position, camera.position, scratch0, speed);
     }
+    if (shell.wasDown('move-left')) {
+      vec3.cross(scratch0, camera.cameraVector, y_axis);
+      vec3.scaleAndAdd(camera.position, camera.position, scratch0, -speed);
+    }
+
+    // flight straight up or down
     // TODO: option to disable flying
     if (shell.wasDown('move-up')) {
       camera.position[1] -= 1;
@@ -40,16 +52,7 @@ var attachCamera = function(shell) {
     if (shell.wasDown('move-down')) {
       camera.position[1] += 1;
     }
-    if (shell.wasDown('move-forward')) {
-      camera.position[2] += 1;
-    }
-    if (shell.wasDown('move-back')) {
-      camera.position[2] -= 1;
-    }
-    if (shell.wasDown('test')) {
-      // TODO: replace move-forward with this, after it works - goes in wrong direction
-      vec3.scaleAndAdd(camera.position, camera.position, camera.cameraVector, 1.0);
-    }
+
 
     // mouselook
     var dx = shell.mouseX - shell.prevMouseX;
