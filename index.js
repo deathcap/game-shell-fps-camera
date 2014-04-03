@@ -9,7 +9,7 @@ var scratch0 = vec3.create();
 var y_axis = vec3.fromValues(0, 1, 0);
 
 var attachCamera = function(shell) {
-  var camera = createBasicCamera([-22, -14, -48]); 
+  var camera = createBasicCamera();
 
   shell.bind('move-left', 'left', 'A');
   shell.bind('move-right', 'right', 'D');
