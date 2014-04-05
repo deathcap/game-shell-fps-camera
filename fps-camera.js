@@ -84,9 +84,6 @@ var attachCamera = function(shell, opts) {
 
   camera.lookAt = function(eye, center, up) { console.log(eye, center, up); }; // TODO: add to basic-camera, as in orbit-camera (https://github.com/hughsk/basic-camera/issues/5)
 
-  window.camera = camera;
-  window.shell = shell;
-
   return camera;
 };
 
