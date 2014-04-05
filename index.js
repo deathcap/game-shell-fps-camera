@@ -8,8 +8,13 @@ var createBasicCamera = require('basic-camera');
 var scratch0 = vec3.create();
 var y_axis = vec3.fromValues(0, 1, 0);
 
-var attachCamera = function(shell) {
+var enableFlight; // TODO: expose
+
+var attachCamera = function(shell, opts) {
   var camera = createBasicCamera();
+
+  opts = opts || {};
+  enableFlight = opts.enableFlight !== undefined ? opts.enableFlight : true;
 
   shell.bind('move-left', 'left', 'A');
   shell.bind('move-right', 'right', 'D');
@@ -44,13 +49,14 @@ var attachCamera = function(shell) {
       vec3.scaleAndAdd(camera.position, camera.position, scratch0, -speed);
     }
 
-    // flight straight up or down
-    // TODO: option to disable flying
-    if (shell.wasDown('move-up')) {
-      camera.position[1] -= 1;
-    }
-    if (shell.wasDown('move-down')) {
-      camera.position[1] += 1;
+    // fly straight up or down
+    if (enableFlight) {
+      if (shell.wasDown('move-up')) {
+        camera.position[1] -= 1;
+      }
+      if (shell.wasDown('move-down')) {
+        camera.position[1] += 1;
+      }
     }
 
 
@@ -70,12 +76,11 @@ var attachCamera = function(shell) {
 
     //console.log(dpitch,dyaw);
 
-    // TODO: fix unintentional rolling
     camera.rotateX(dpitch);
     camera.rotateY(dyaw);
   });
 
-  camera.lookAt = function(eye, center, up) { console.log(eye, center, up); }; // TODO: add to basic-camera, as in orbit-camera
+  camera.lookAt = function(eye, center, up) { console.log(eye, center, up); }; // TODO: add to basic-camera, as in orbit-camera (https://github.com/hughsk/basic-camera/issues/5)
 
   window.camera = camera;
   window.shell = shell;
