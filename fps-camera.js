@@ -27,6 +27,7 @@ var attachCamera = function(shell, opts) {
   var max_dyaw = Math.PI / 2;
   var scale = 0.0002;
   var speed = 1.0;
+  var cameraVector = vec3.create();
 
   shell.on('tick', function() {
     if (!shell.pointerLock) {
@@ -34,18 +35,19 @@ var attachCamera = function(shell, opts) {
     }
 
     // movement relative to camera
+    camera.getCameraVector(cameraVector);
     if (shell.wasDown('move-forward')) {
-      vec3.scaleAndAdd(camera.position, camera.position, camera.cameraVector, speed);
+      vec3.scaleAndAdd(camera.position, camera.position, cameraVector, speed);
     }
     if (shell.wasDown('move-back')) {
-      vec3.scaleAndAdd(camera.position, camera.position, camera.cameraVector, -speed);
+      vec3.scaleAndAdd(camera.position, camera.position, cameraVector, -speed);
     }
     if (shell.wasDown('move-right')) {
-      vec3.cross(scratch0, camera.cameraVector, y_axis);
+      vec3.cross(scratch0, cameraVector, y_axis);
       vec3.scaleAndAdd(camera.position, camera.position, scratch0, speed);
     }
     if (shell.wasDown('move-left')) {
-      vec3.cross(scratch0, camera.cameraVector, y_axis);
+      vec3.cross(scratch0, cameraVector, y_axis);
       vec3.scaleAndAdd(camera.position, camera.position, scratch0, -speed);
     }
 

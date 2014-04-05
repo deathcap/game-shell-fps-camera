@@ -12,7 +12,7 @@
     "camera"
   ],
   "dependencies": {
-    "basic-camera": "git://github.com/deathcap/basic-camera.git#7c94de00bd6aee14fb0301e902dd91f39d700173",
+    "basic-camera": "^1.1.0",
     "gl-matrix": "^2.2.0"
   },
   "license": "MIT"
