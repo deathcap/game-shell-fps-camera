@@ -18,10 +18,10 @@ var attachCamera = function(shell, opts) {
 
   shell.bind('move-left', 'left', 'A');
   shell.bind('move-right', 'right', 'D');
-  shell.bind('move-forward', 'forward', 'W');
-  shell.bind('move-back', 'back', 'S');
-  shell.bind('move-up', 'up', 'space');
-  shell.bind('move-down', 'down', 'shift');
+  shell.bind('move-forward', 'up', 'W');
+  shell.bind('move-back', 'down', 'S');
+  shell.bind('move-up', 'space');
+  shell.bind('move-down', 'shift');
 
   var max_dpitch = Math.PI / 2;
   var max_dyaw = Math.PI / 2;
