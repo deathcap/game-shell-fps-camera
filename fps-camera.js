@@ -63,55 +63,55 @@ CameraPlugin.prototype.view = function(out) {
 };
 
 CameraPlugin.prototype.tick = function() {
-    if (!this.shell.pointerLock) {
-      return;
+  if (!this.shell.pointerLock) {
+    return;
+  }
+
+  // movement relative to camera
+  this.camera.getCameraVector(this.cameraVector);
+  if (this.shell.wasDown('move-forward')) {
+    vec3.scaleAndAdd(this.camera.position, this.camera.position, this.cameraVector, this.speed);
+  }
+  if (this.shell.wasDown('move-back')) {
+    vec3.scaleAndAdd(this.camera.position, this.camera.position, this.cameraVector, -this.speed);
+  }
+  if (this.shell.wasDown('move-right')) {
+    vec3.cross(this.scratch0, this.cameraVector, this.y_axis);
+    vec3.scaleAndAdd(this.camera.position, this.camera.position, this.scratch0, this.speed);
+  }
+  if (this.shell.wasDown('move-left')) {
+    vec3.cross(this.scratch0, this.cameraVector, this.y_axis);
+    vec3.scaleAndAdd(this.camera.position, this.camera.position, this.scratch0, -this.speed);
+  }
+
+  // fly straight up or down
+  if (this.enableFlight) {
+    if (this.shell.wasDown('move-up')) {
+      this.camera.position[1] -= 1;
     }
-
-    // movement relative to camera
-    this.camera.getCameraVector(this.cameraVector);
-    if (this.shell.wasDown('move-forward')) {
-      vec3.scaleAndAdd(this.camera.position, this.camera.position, this.cameraVector, this.speed);
+    if (this.shell.wasDown('move-down')) {
+      this.camera.position[1] += 1;
     }
-    if (this.shell.wasDown('move-back')) {
-      vec3.scaleAndAdd(this.camera.position, this.camera.position, this.cameraVector, -this.speed);
-    }
-    if (this.shell.wasDown('move-right')) {
-      vec3.cross(this.scratch0, this.cameraVector, this.y_axis);
-      vec3.scaleAndAdd(this.camera.position, this.camera.position, this.scratch0, this.speed);
-    }
-    if (this.shell.wasDown('move-left')) {
-      vec3.cross(this.scratch0, this.cameraVector, this.y_axis);
-      vec3.scaleAndAdd(this.camera.position, this.camera.position, this.scratch0, -this.speed);
-    }
-
-    // fly straight up or down
-    if (this.enableFlight) {
-      if (this.shell.wasDown('move-up')) {
-        this.camera.position[1] -= 1;
-      }
-      if (this.shell.wasDown('move-down')) {
-        this.camera.position[1] += 1;
-      }
-    }
+  }
 
 
-    // mouselook
-    var dx = this.shell.mouseX - this.shell.prevMouseX;
-    var dy = this.shell.mouseY - this.shell.prevMouseY;
-    var dt = this.shell.frameTime;
-    //console.log(dx,dy,dt);
+  // mouselook
+  var dx = this.shell.mouseX - this.shell.prevMouseX;
+  var dy = this.shell.mouseY - this.shell.prevMouseY;
+  var dt = this.shell.frameTime;
+  //console.log(dx,dy,dt);
 
-    var dpitch = dy / dt * this.scale;
-    var dyaw = dx / dt * this.scale;
+  var dpitch = dy / dt * this.scale;
+  var dyaw = dx / dt * this.scale;
 
-    if (dpitch > this.max_dpitch) dpitch = max_dpitch;
-    if (dpitch < -this.max_dpitch) dpitch = -max_dpitch;
-    if (dyaw > this.max_dyaw) dyaw = max_dyaw;
-    if (dyaw < -this.max_dyaw) dyaw = -max_dyaw;
+  if (dpitch > this.max_dpitch) dpitch = max_dpitch;
+  if (dpitch < -this.max_dpitch) dpitch = -max_dpitch;
+  if (dyaw > this.max_dyaw) dyaw = max_dyaw;
+  if (dyaw < -this.max_dyaw) dyaw = -max_dyaw;
 
-    //console.log(dpitch,dyaw);
+  //console.log(dpitch,dyaw);
 
-    this.camera.rotateX(dpitch);
-    this.camera.rotateY(dyaw);
+  this.camera.rotateX(dpitch);
+  this.camera.rotateY(dyaw);
 };
 
