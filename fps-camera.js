@@ -62,6 +62,14 @@ CameraPlugin.prototype.view = function(out) {
   return this.camera.view(out);
 };
 
+CameraPlugin.prototype.getPosition = function(out) {
+  // Negate since basic-camera consides -Y up, but we use +Y for up
+  // TODO: do X and Z need to be negated too?
+  out[0] = -this.camera.position[0];
+  out[1] = -this.camera.position[1];
+  out[2] = -this.camera.position[2];
+};
+
 CameraPlugin.prototype.tick = function() {
   if (!this.shell.pointerLock) {
     return;
