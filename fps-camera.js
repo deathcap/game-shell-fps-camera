@@ -8,7 +8,7 @@ module.exports = function(game, opts) {
   return new CameraPlugin(game, opts);
 }
 module.exports.pluginInfo = {
-  clientOnly: true
+  //clientOnly: true // TODO: server-side support for storing camera location, without rendering?
 };
 
 function CameraPlugin(game, opts) {
