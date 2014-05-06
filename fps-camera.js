@@ -38,24 +38,24 @@ function CameraPlugin(game, opts) {
 
 
 CameraPlugin.prototype.enable = function() {
-  this.shell.bind('move-left', 'left', 'A');
-  this.shell.bind('move-right', 'right', 'D');
-  this.shell.bind('move-forward', 'up', 'W');
-  this.shell.bind('move-back', 'down', 'S');
-  this.shell.bind('move-up', 'space');
-  this.shell.bind('move-down', 'shift');
+  this.shell.bind('left', 'left', 'A');
+  this.shell.bind('right', 'right', 'D');
+  this.shell.bind('forward', 'up', 'W');
+  this.shell.bind('backward', 'down', 'S');
+  this.shell.bind('jump', 'space');
+  this.shell.bind('crouch', 'shift');
 
   this.shell.on('tick', this.onTick = this.tick.bind(this));
 };
 
 CameraPlugin.prototype.disable = function() {
   this.shell.removeListener('tick', this.onTick);
-  this.shell.unbind('move-left');
-  this.shell.unbind('move-right');
-  this.shell.unbind('move-forward');
-  this.shell.unbind('move-back');
-  this.shell.unbind('move-up');
-  this.shell.unbind('move-down');
+  this.shell.unbind('left');
+  this.shell.unbind('right');
+  this.shell.unbind('forward');
+  this.shell.unbind('backward');
+  this.shell.unbind('jump');
+  this.shell.unbind('crouch');
 };
 
 CameraPlugin.prototype.view = function(out) {
@@ -77,27 +77,27 @@ CameraPlugin.prototype.tick = function() {
 
   // movement relative to camera
   this.camera.getCameraVector(this.cameraVector);
-  if (this.shell.wasDown('move-forward')) {
+  if (this.shell.wasDown('forward')) {
     vec3.scaleAndAdd(this.camera.position, this.camera.position, this.cameraVector, this.speed);
   }
-  if (this.shell.wasDown('move-back')) {
+  if (this.shell.wasDown('backward')) {
     vec3.scaleAndAdd(this.camera.position, this.camera.position, this.cameraVector, -this.speed);
   }
-  if (this.shell.wasDown('move-right')) {
+  if (this.shell.wasDown('right')) {
     vec3.cross(this.scratch0, this.cameraVector, this.y_axis);
     vec3.scaleAndAdd(this.camera.position, this.camera.position, this.scratch0, this.speed);
   }
-  if (this.shell.wasDown('move-left')) {
+  if (this.shell.wasDown('left')) {
     vec3.cross(this.scratch0, this.cameraVector, this.y_axis);
     vec3.scaleAndAdd(this.camera.position, this.camera.position, this.scratch0, -this.speed);
   }
 
   // fly straight up or down
   if (this.enableFlight) {
-    if (this.shell.wasDown('move-up')) {
+    if (this.shell.wasDown('jump')) {
       this.camera.position[1] -= 1;
     }
-    if (this.shell.wasDown('move-down')) {
+    if (this.shell.wasDown('crouch')) {
       this.camera.position[1] += 1;
     }
   }
