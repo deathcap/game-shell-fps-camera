@@ -112,10 +112,10 @@ CameraPlugin.prototype.tick = function() {
   var dpitch = dy / dt * this.scale;
   var dyaw = dx / dt * this.scale;
 
-  if (dpitch > this.max_dpitch) dpitch = max_dpitch;
-  if (dpitch < -this.max_dpitch) dpitch = -max_dpitch;
-  if (dyaw > this.max_dyaw) dyaw = max_dyaw;
-  if (dyaw < -this.max_dyaw) dyaw = -max_dyaw;
+  if (dpitch > this.max_dpitch) dpitch = this.max_dpitch;
+  if (dpitch < -this.max_dpitch) dpitch = -this.max_dpitch;
+  if (dyaw > this.max_dyaw) dyaw = this.max_dyaw;
+  if (dyaw < -this.max_dyaw) dyaw = -this.max_dyaw;
 
   //console.log(dpitch,dyaw);
 
