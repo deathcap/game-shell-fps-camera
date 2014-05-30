@@ -12,6 +12,7 @@ module.exports.pluginInfo = {
 };
 
 function CameraPlugin(game, opts) {
+  this.game = game;
   this.shell = game.shell;
 
   opts = opts || {};
@@ -33,6 +34,14 @@ function CameraPlugin(game, opts) {
   this.scratch0 = vec3.create();
   this.y_axis = vec3.fromValues(0, 1, 0);
 
+  this.player = {
+    position: {x:0, y:0, z:0},
+    rotation: {x:0, y:0, z:0},
+    translateX: function(dx) { this.position.x += dx; },
+    translateY: function(dy) { this.position.y += dy; },
+    translateZ: function(dz) { this.position.z += dz; },
+  };
+
   this.enable();
 }
 
@@ -44,8 +53,16 @@ CameraPlugin.prototype.enable = function() {
   this.shell.bind('backward', 'down', 'S');
   this.shell.bind('jump', 'space');
   this.shell.bind('crouch', 'shift');
-
   this.shell.on('tick', this.onTick = this.tick.bind(this));
+
+  this.physics = this.game.makePhysical(this.player); // voxel-physical
+  this.game.addItem(this.physics);
+  this.physics.yaw = this.player;
+  this.physics.pitch = this.player;//.head;
+  this.physics.subjectTo(this.game.gravity);
+  this.physics.blocksCreation = true;
+
+  this.game.control(game.physics);
 };
 
 CameraPlugin.prototype.disable = function() {
@@ -71,9 +88,17 @@ CameraPlugin.prototype.getPosition = function(out) {
 };
 
 CameraPlugin.prototype.tick = function() {
+  // hook up voxel-physical to camera
+  this.camera.position[0] = -this.player.position.x;
+  this.camera.position[1] = -this.player.position.y;
+  this.camera.position[2] = -this.player.position.z;
+
+
   if (!this.shell.pointerLock) {
     return;
   }
+
+  // TODO XXX: remove these direct controls, go through voxel-control (pipe interact events to its stream)
 
   // movement relative to camera
   this.camera.getCameraVector(this.cameraVector);
