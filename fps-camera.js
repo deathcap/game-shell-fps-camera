@@ -42,6 +42,8 @@ function CameraPlugin(game, opts) {
     translateZ: function(dz) { this.position.z += dz; },
   };
 
+  this.enablePhysics = opts.enablePhysics !== undefined ? opts.enablePhysics : false;
+
   this.enable();
 }
 
@@ -88,10 +90,12 @@ CameraPlugin.prototype.getPosition = function(out) {
 };
 
 CameraPlugin.prototype.tick = function() {
-  // hook up voxel-physical to camera
-  this.camera.position[0] = -this.player.position.x;
-  this.camera.position[1] = -this.player.position.y;
-  this.camera.position[2] = -this.player.position.z;
+  if (this.enablePhysics) {
+    // hook up voxel-physical to camera
+    this.camera.position[0] = -this.player.position.x;
+    this.camera.position[1] = -this.player.position.y;
+    this.camera.position[2] = -this.player.position.z;
+  }
 
 
   if (!this.shell.pointerLock) {
