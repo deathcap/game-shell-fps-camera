@@ -35,14 +35,24 @@ function CameraPlugin(game, opts) {
   this.y_axis = vec3.fromValues(0, 1, 0);
 
   var camera = this.camera;
+  // three.js-like object for voxel-physical target
   this.player = {
-    position: {x:0, y:0, z:0},
-    rotation: {x:0, y:0, z:0},
+    position: {},
+    rotation: {},
    
     translateX: function(dx) { camera.position[0] -= dx; },
     translateY: function(dy) { camera.position[1] -= dy; },
     translateZ: function(dz) { camera.position[2] -= dz; },
   };
+
+  Object.defineProperty(this.player.position, 'x', {get:function() { return camera.position[0]; }});
+  Object.defineProperty(this.player.position, 'y', {get:function() { return camera.position[1]; }});
+  Object.defineProperty(this.player.position, 'z', {get:function() { return camera.position[2]; }});
+
+  Object.defineProperty(this.player.rotation, 'x', {get:function() { return camera.rotationX; }});
+  Object.defineProperty(this.player.rotation, 'y', {get:function() { return camera.rotationY; }});
+  Object.defineProperty(this.player.rotation, 'z', {get:function() { return camera.rotationZ; }});
+
 
   this.enable();
 }
