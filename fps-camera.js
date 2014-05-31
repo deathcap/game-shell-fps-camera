@@ -74,7 +74,7 @@ CameraPlugin.prototype.enable = function() {
   this.physics.subjectTo(this.game.gravity);
   this.physics.blocksCreation = true;
 
-  this.game.control(game.physics);
+  this.game.control(this.physics);
 };
 
 CameraPlugin.prototype.disable = function() {
