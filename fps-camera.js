@@ -34,15 +34,15 @@ function CameraPlugin(game, opts) {
   this.scratch0 = vec3.create();
   this.y_axis = vec3.fromValues(0, 1, 0);
 
+  var camera = this.camera;
   this.player = {
     position: {x:0, y:0, z:0},
     rotation: {x:0, y:0, z:0},
-    translateX: function(dx) { this.position.x += dx; },
-    translateY: function(dy) { this.position.y += dy; },
-    translateZ: function(dz) { this.position.z += dz; },
+   
+    translateX: function(dx) { camera.position[0] -= dx; },
+    translateY: function(dy) { camera.position[1] -= dy; },
+    translateZ: function(dz) { camera.position[2] -= dz; },
   };
-
-  this.enablePhysics = opts.enablePhysics !== undefined ? opts.enablePhysics : false;
 
   this.enable();
 }
@@ -90,20 +90,13 @@ CameraPlugin.prototype.getPosition = function(out) {
 };
 
 CameraPlugin.prototype.tick = function() {
-  if (this.enablePhysics) {
-    // hook up voxel-physical to camera
-    this.camera.position[0] = -this.player.position.x;
-    this.camera.position[1] = -this.player.position.y;
-    this.camera.position[2] = -this.player.position.z;
-  }
-
-
   if (!this.shell.pointerLock) {
     return;
   }
 
   // TODO XXX: remove these direct controls, go through voxel-control (pipe interact events to its stream)
 
+  /*
   // movement relative to camera
   this.camera.getCameraVector(this.cameraVector);
   if (this.shell.wasDown('forward')) {
@@ -129,7 +122,7 @@ CameraPlugin.prototype.tick = function() {
     if (this.shell.wasDown('crouch')) {
       this.camera.position[1] += 1;
     }
-  }
+  }*/
 
 
   // mouselook
