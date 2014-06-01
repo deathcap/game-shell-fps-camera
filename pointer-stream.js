@@ -9,10 +9,19 @@ function PointerStream(opts) {
   this.shell = opts.shell;
   if (!this.shell) throw new Error('PointerStream requires shell option set to game-shell instance');
 
-  this.shell.on('tick', this.tick.bind(this));
+  this.enable();
 }
 
 inherits(PointerStream, Readable);
+
+PointerStream.prototype.enable = function() {
+  this.shell.on('tick', this.onTick = this.tick.bind(this));
+};
+
+PointerStream.prototype.disable = function() {
+  this.shell.removeListener('tick', this.onTick);
+};
+
 
 PointerStream.prototype.tick = function() {
   var dx = this.shell.prevMouseX - this.shell.mouseX;

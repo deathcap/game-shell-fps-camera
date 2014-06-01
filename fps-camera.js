@@ -74,6 +74,7 @@ CameraPlugin.prototype.enable = function() {
 };
 
 CameraPlugin.prototype.disable = function() {
+  this.pointerStream.disable();
   this.shell.removeListener('tick', this.onTick);
   this.shell.unbind('left');
   this.shell.unbind('right');
