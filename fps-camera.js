@@ -26,14 +26,7 @@ function CameraPlugin(game, opts) {
   this.camera.rotationY = opts.rotationY || 0.0;
   this.camera.rotationZ = opts.rotationZ || 0.0;
 
-  this.max_dpitch = Math.PI / 2;
-  this.max_dyaw = Math.PI / 2;
-  this.scale = 0.0002;
-  this.speed = 1.0;
   this.cameraVector = vec3.create();
-
-  this.scratch0 = vec3.create();
-  this.y_axis = vec3.fromValues(0, 1, 0);
 
   var camera = this.camera;
   // three.js-like object for voxel-physical target
@@ -50,10 +43,9 @@ function CameraPlugin(game, opts) {
   Object.defineProperty(this.player.position, 'y', {get:function() { return camera.position[1]; }});
   Object.defineProperty(this.player.position, 'z', {get:function() { return camera.position[2]; }});
 
-  Object.defineProperty(this.player.rotation, 'x', {get:function() { return camera.rotationX; }});
-  Object.defineProperty(this.player.rotation, 'y', {get:function() { return camera.rotationY; }});
-  Object.defineProperty(this.player.rotation, 'z', {get:function() { return camera.rotationZ; }});
-
+  Object.defineProperty(this.player.rotation, 'x', {get:function() { return camera.rotationX; }, set:function(dx) { camera.rotationX = dx; }});
+  Object.defineProperty(this.player.rotation, 'y', {get:function() { return camera.rotationY; }, set:function(dy) { camera.rotationY = dy; }});
+  Object.defineProperty(this.player.rotation, 'z', {get:function() { return camera.rotationZ; }, set:function(dz) { camera.rotationZ = dz; }});
 
   this.enable();
 }
@@ -78,7 +70,7 @@ CameraPlugin.prototype.enable = function() {
   this.game.control(this.physics);
 
   this.pointerStream = new PointerStream({shell:this.shell});
-  //this.pointerStream.pipe(this.game.controls); // TODO: fix hang
+  this.pointerStream.pipe(this.game.controls.createWriteRotationStream());
 };
 
 CameraPlugin.prototype.disable = function() {
@@ -119,25 +111,5 @@ CameraPlugin.prototype.tick = function() {
       this.camera.position[1] += 1;
     }
   }*/
-
-
-  // mouselook
-  var dx = this.shell.mouseX - this.shell.prevMouseX;
-  var dy = this.shell.mouseY - this.shell.prevMouseY;
-  var dt = this.shell.frameTime;
-  //console.log(dx,dy,dt);
-
-  var dpitch = dy / dt * this.scale;
-  var dyaw = dx / dt * this.scale;
-
-  if (dpitch > this.max_dpitch) dpitch = this.max_dpitch;
-  if (dpitch < -this.max_dpitch) dpitch = -this.max_dpitch;
-  if (dyaw > this.max_dyaw) dyaw = this.max_dyaw;
-  if (dyaw < -this.max_dyaw) dyaw = -this.max_dyaw;
-
-  //console.log(dpitch,dyaw);
-
-  this.camera.rotateX(dpitch);
-  this.camera.rotateY(dyaw);
 };
 
