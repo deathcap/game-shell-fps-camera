@@ -20,7 +20,7 @@ function CameraPlugin(game, opts) {
 
   this.camera = createBasicCamera();
   this.camera.lookAt = function(eye, center, up) { console.log(eye, center, up); }; // TODO: add to basic-camera, as in orbit-camera (https://github.com/hughsk/basic-camera/issues/5)
-  this.camera.position.set(opts.position || [0,0,0]);
+  this.camera.position.set(opts.position || [0,-30,0]);
   this.camera.rotationX = opts.rotationX || 0.0;
   this.camera.rotationY = opts.rotationY || 0.0;
   this.camera.rotationZ = opts.rotationZ || 0.0;
