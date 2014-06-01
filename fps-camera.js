@@ -104,26 +104,8 @@ CameraPlugin.prototype.tick = function() {
     return;
   }
 
-  // TODO XXX: remove these direct controls, go through voxel-control (pipe interact events to its stream)
-
+  // TODO: reconcile with voxel-fly
   /*
-  // movement relative to camera
-  this.camera.getCameraVector(this.cameraVector);
-  if (this.shell.wasDown('forward')) {
-    vec3.scaleAndAdd(this.camera.position, this.camera.position, this.cameraVector, this.speed);
-  }
-  if (this.shell.wasDown('backward')) {
-    vec3.scaleAndAdd(this.camera.position, this.camera.position, this.cameraVector, -this.speed);
-  }
-  if (this.shell.wasDown('right')) {
-    vec3.cross(this.scratch0, this.cameraVector, this.y_axis);
-    vec3.scaleAndAdd(this.camera.position, this.camera.position, this.scratch0, this.speed);
-  }
-  if (this.shell.wasDown('left')) {
-    vec3.cross(this.scratch0, this.cameraVector, this.y_axis);
-    vec3.scaleAndAdd(this.camera.position, this.camera.position, this.scratch0, -this.speed);
-  }
-
   // fly straight up or down
   if (this.enableFlight) {
     if (this.shell.wasDown('jump')) {
