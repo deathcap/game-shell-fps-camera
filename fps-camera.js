@@ -3,6 +3,7 @@
 var glm = require('gl-matrix');
 var vec3 = glm.vec3;
 var createBasicCamera = require('basic-camera');
+var PointerStream = require('./pointer-stream.js');
 
 module.exports = function(game, opts) {
   return new CameraPlugin(game, opts);
@@ -75,6 +76,9 @@ CameraPlugin.prototype.enable = function() {
   this.physics.blocksCreation = true;
 
   this.game.control(this.physics);
+
+  this.pointerStream = new PointerStream({shell:this.shell});
+  //this.pointerStream.pipe(this.game.controls); // TODO: fix hang
 };
 
 CameraPlugin.prototype.disable = function() {
