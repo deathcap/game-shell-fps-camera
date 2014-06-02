@@ -12,6 +12,13 @@ module.exports.pluginInfo = {
   //clientOnly: true // TODO: server-side support for storing camera location, without rendering?
 };
 
+var proxyProp = function(o1, p1, o2, p2) {
+  Object.defineProperty(o1, p1, {
+    get:function() { return o2[p2]; },
+    set:function(v) { o2[p2] = v; }
+  });
+};
+
 function CameraPlugin(game, opts) {
   this.game = game;
   this.shell = game.shell;
@@ -39,13 +46,13 @@ function CameraPlugin(game, opts) {
     translateZ: function(dz) { camera.position[2] -= dz; },
   };
 
-  Object.defineProperty(this.player.position, 'x', {get:function() { return camera.position[0]; }, set:function(x) { camera.position[0] = x; }});
-  Object.defineProperty(this.player.position, 'y', {get:function() { return camera.position[1]; }, set:function(y) { camera.position[1] = y; }});
-  Object.defineProperty(this.player.position, 'z', {get:function() { return camera.position[2]; }, set:function(z) { camera.position[2] = z; }});
+  proxyProp(this.player.position, 'x', camera.position, 0);
+  proxyProp(this.player.position, 'y', camera.position, 1);
+  proxyProp(this.player.position, 'z', camera.position, 2);
 
-  Object.defineProperty(this.player.rotation, 'x', {get:function() { return camera.rotationX; }, set:function(x) { camera.rotationX = x; }});
-  Object.defineProperty(this.player.rotation, 'y', {get:function() { return camera.rotationY; }, set:function(y) { camera.rotationY = y; }});
-  Object.defineProperty(this.player.rotation, 'z', {get:function() { return camera.rotationZ; }, set:function(z) { camera.rotationZ = z; }});
+  proxyProp(this.player.rotation, 'x', camera, 'rotationX');
+  proxyProp(this.player.rotation, 'y', camera, 'rotationY');
+  proxyProp(this.player.rotation, 'z', camera, 'rotationZ');
 
   this.enable();
 }
