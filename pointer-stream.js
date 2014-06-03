@@ -24,6 +24,10 @@ PointerStream.prototype.disable = function() {
 
 
 PointerStream.prototype.tick = function() {
+  if (!this.shell.pointerLock) {
+    return;
+  }
+
   var dx = this.shell.prevMouseX - this.shell.mouseX;
   var dy = this.shell.prevMouseY - this.shell.mouseY;
   var dt = Date.now() - this.shell.startTime;
