@@ -51,9 +51,9 @@ function CameraPlugin(game, opts) {
   proxyProp(this.player.position, 'y', camera.position, 1);
   proxyProp(this.player.position, 'z', camera.position, 2);
   */
-  Object.defineProperty(this.player.position, 'x', { get:function() { return -camera.position[0]; }, set:function(v) { camera.position[0] = -v; }});
+  Object.defineProperty(this.player.position, 'x', { get:function() { return -camera.position[2]; }, set:function(v) { camera.position[2] = -v; }});
   Object.defineProperty(this.player.position, 'y', { get:function() { return -camera.position[1]; }, set:function(v) { camera.position[1] = -v; }});
-  Object.defineProperty(this.player.position, 'z', { get:function() { return -camera.position[2]; }, set:function(v) { camera.position[2] = -v; }});
+  Object.defineProperty(this.player.position, 'z', { get:function() { return -camera.position[0]; }, set:function(v) { camera.position[0] = -v; }});
 
   proxyProp(this.player.rotation, 'x', camera, 'rotationX');
   proxyProp(this.player.rotation, 'y', camera, 'rotationY');
