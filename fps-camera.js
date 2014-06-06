@@ -46,9 +46,14 @@ function CameraPlugin(game, opts) {
     translateZ: function(dz) { camera.position[2] -= dz; },
   };
 
+  /*
   proxyProp(this.player.position, 'x', camera.position, 0);
   proxyProp(this.player.position, 'y', camera.position, 1);
   proxyProp(this.player.position, 'z', camera.position, 2);
+  */
+  Object.defineProperty(this.player.position, 'x', { get:function() { return -camera.position[0]; }, set:function(v) { camera.position[0] = -v; }});
+  Object.defineProperty(this.player.position, 'y', { get:function() { return -camera.position[1]; }, set:function(v) { camera.position[1] = -v; }});
+  Object.defineProperty(this.player.position, 'z', { get:function() { return -camera.position[2]; }, set:function(v) { camera.position[2] = -v; }});
 
   proxyProp(this.player.rotation, 'x', camera, 'rotationX');
   proxyProp(this.player.rotation, 'y', camera, 'rotationY');
@@ -71,6 +76,7 @@ CameraPlugin.prototype.enable = function() {
   this.game.addItem(this.physics);
   this.physics.yaw = this.player;
   this.physics.pitch = this.player;//.head;
+  //this.physics.roll = this.player;
   this.physics.subjectTo(this.game.gravity);
   this.physics.blocksCreation = true;
 
