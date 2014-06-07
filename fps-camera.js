@@ -77,7 +77,6 @@ CameraPlugin.prototype.enable = function() {
   this.shell.bind('backward', 'down', 'S');
   this.shell.bind('jump', 'space');
   this.shell.bind('crouch', 'shift');
-  this.shell.on('tick', this.onTick = this.tick.bind(this));
 
   this.physics = this.game.makePhysical(this.player); // voxel-physical
   this.game.addItem(this.physics);
@@ -95,7 +94,6 @@ CameraPlugin.prototype.enable = function() {
 
 CameraPlugin.prototype.disable = function() {
   this.pointerStream.disable();
-  this.shell.removeListener('tick', this.onTick);
   this.shell.unbind('left');
   this.shell.unbind('right');
   this.shell.unbind('forward');
@@ -115,22 +113,3 @@ CameraPlugin.prototype.getPosition = function(out) {
   out[1] = -this.camera.position[1];
   out[2] = -this.camera.position[0];
 };
-
-CameraPlugin.prototype.tick = function() {
-  if (!this.shell.pointerLock) {
-    return;
-  }
-
-  // TODO: reconcile with voxel-fly
-  /*
-  // fly straight up or down
-  if (this.enableFlight) {
-    if (this.shell.wasDown('jump')) {
-      this.camera.position[1] -= 1;
-    }
-    if (this.shell.wasDown('crouch')) {
-      this.camera.position[1] += 1;
-    }
-  }*/
-};
-
