@@ -2,6 +2,7 @@
 
 var glm = require('gl-matrix');
 var vec3 = glm.vec3;
+var quat = glm.quat;
 var createBasicCamera = require('basic-camera');
 var PointerStream = require('./pointer-stream.js');
 
@@ -27,30 +28,38 @@ function CameraPlugin(game, opts) {
   this.camera.rotationZ = opts.rotationZ || 0.0;
 
   this.cameraVector = vec3.create();
-
   var camera = this.camera;
+
+  var q = this.q = quat.create();
+  var axis = vec3.create();
+
+  var translateOnAxis = function(x, y, z, distance) {
+    vec3.set(axis, x, y, z);
+    vec3.transformQuat(axis, axis, q);
+    vec3.scaleAndAdd(camera.position, camera.position, axis, distance);
+  };
+
   // three.js-like object for voxel-physical target
   this.player = {
     position: {},
     rotation: {},
-   
-    translateX: function(dx) { camera.position[0] -= dx; },
-    translateY: function(dy) { camera.position[1] -= dy; },
-    translateZ: function(dz) { camera.position[2] -= dz; },
+
+    translateX: translateOnAxis.bind(null, -1, 0, 0),
+    translateY: translateOnAxis.bind(null, 0, -1, 0),
+    translateZ: translateOnAxis.bind(null, 0, 0, -1),
   };
 
-  /*
-  proxyProp(this.player.position, 'x', camera.position, 0);
-  proxyProp(this.player.position, 'y', camera.position, 1);
-  proxyProp(this.player.position, 'z', camera.position, 2);
-  */
   var offset = 1.5; // distance between camera pos (eyes) and player pos (feet), voxel-engine makePhysical envelope y TODO: stop hardcoding here..
   Object.defineProperty(this.player.position, 'x', { get:function() { return -camera.position[2]; }, set:function(v) { camera.position[2] = -v; }});
   Object.defineProperty(this.player.position, 'y', { get:function() { return -camera.position[1]-offset; }, set:function(v) { camera.position[1] = -v-offset; }});
   Object.defineProperty(this.player.position, 'z', { get:function() { return -camera.position[0]; }, set:function(v) { camera.position[0] = -v; }});
 
   var updateRotation = function() {
-    // TODO
+    // update Euler angles (order YXZ) to quaternion
+    quat.identity(q);
+    quat.rotateY(q, q, -camera.rotationY); // yaw
+    //quat.rotateZ(q, q, camera.rotationZ); // roll always zero for now
+    //quat.rotateX(q, q, camera.rotationX); // pitch should have no effect on WASD movement (otherwise, will bounce up when looking around and walking)
   };
 
   Object.defineProperty(this.player.rotation, 'x', { get:function() { return camera.rotationX; }, set:function(v) { camera.rotationX = v; updateRotation(); }});
@@ -73,8 +82,8 @@ CameraPlugin.prototype.enable = function() {
   this.physics = this.game.makePhysical(this.player); // voxel-physical
   this.game.addItem(this.physics);
   this.physics.yaw = this.player;
-  this.physics.pitch = this.player;//.head;
-  //this.physics.roll = this.player;
+  this.physics.pitch = this.player;//.head; TODO
+  //this.physics.roll = this.player; // TODO: advanced rolling controls? (aircraft, flight?)
   this.physics.subjectTo(this.game.gravity);
   this.physics.blocksCreation = true;
 
