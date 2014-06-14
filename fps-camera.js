@@ -50,9 +50,9 @@ function CameraPlugin(game, opts) {
   };
 
   var offset = 1.5; // distance between camera pos (eyes) and player pos (feet), voxel-engine makePhysical envelope y TODO: stop hardcoding here..
-  Object.defineProperty(this.player.position, 'x', { get:function() { return -camera.position[2]; }, set:function(v) { camera.position[2] = -v; }});
+  Object.defineProperty(this.player.position, 'x', { get:function() { return -camera.position[0]; }, set:function(v) { camera.position[0] = -v; }});
   Object.defineProperty(this.player.position, 'y', { get:function() { return -camera.position[1]-offset; }, set:function(v) { camera.position[1] = -v-offset; }});
-  Object.defineProperty(this.player.position, 'z', { get:function() { return -camera.position[0]; }, set:function(v) { camera.position[0] = -v; }});
+  Object.defineProperty(this.player.position, 'z', { get:function() { return -camera.position[2]; }, set:function(v) { camera.position[2] = -v; }});
 
   var updateRotation = function() {
     // update Euler angles (order YXZ) to quaternion
@@ -107,9 +107,16 @@ CameraPlugin.prototype.view = function(out) {
 };
 
 CameraPlugin.prototype.getPosition = function(out) {
-  // Negate since basic-camera consider -Y up (etc.), but we use +Y for up
-  // and swap X,Z due to differing conventions
-  out[0] = -this.camera.position[2];
+  // Negate since basic-camera considers -Y up (etc.), but we use +Y for up
+  out[0] = -this.camera.position[0];
   out[1] = -this.camera.position[1];
-  out[2] = -this.camera.position[0];
+  out[2] = -this.camera.position[2];
+};
+
+var _scratch1 = [0,0,0];
+CameraPlugin.prototype.getVector = function(out) {
+  this.camera.getCameraVector(_scratch1);
+  out[0] = -_scratch1[0];
+  out[1] = -_scratch1[1];
+  out[2] = -_scratch1[2];
 };
