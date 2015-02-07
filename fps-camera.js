@@ -5,6 +5,8 @@ var vec3 = glm.vec3;
 var quat = glm.quat;
 var createBasicCamera = require('basic-camera');
 var PointerStream = require('./pointer-stream.js');
+var inherits = require('inherits');
+var EventEmitter = require('events').EventEmitter;
 
 module.exports = function(game, opts) {
   return new CameraPlugin(game, opts);
@@ -68,7 +70,7 @@ function CameraPlugin(game, opts) {
 
   this.enable();
 }
-
+inherits(CameraPlugin, EventEmitter);
 
 CameraPlugin.prototype.enable = function() {
   this.shell.bind('left', 'left', 'A');
@@ -103,7 +105,10 @@ CameraPlugin.prototype.disable = function() {
 };
 
 CameraPlugin.prototype.view = function(out) {
-  return this.camera.view(out);
+  this.camera.view(out); // (note: returns out)
+  // Allow other plugins to adjust the view matrix
+  this.emit('view', out);
+  return out;
 };
 
 CameraPlugin.prototype.getPosition = function(out) {
