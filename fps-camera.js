@@ -80,18 +80,25 @@ CameraPlugin.prototype.enable = function() {
   this.shell.bind('jump', 'space');
   this.shell.bind('crouch', 'shift');
 
-  this.physics = this.game.makePhysical(this.player); // voxel-physical
-  this.game.addItem(this.physics);
-  this.physics.yaw = this.player;
-  this.physics.pitch = this.player;//.head; TODO
-  //this.physics.roll = this.player; // TODO: advanced rolling controls? (aircraft, flight?)
-  this.physics.subjectTo(this.game.gravity);
-  this.physics.blocksCreation = true;
+  if (this.game.makePhysical) {
+    this.physics = this.game.makePhysical(this.player); // voxel-physical
+    this.game.addItem(this.physics);
+    this.physics.yaw = this.player;
+    this.physics.pitch = this.player;//.head; TODO
+    //this.physics.roll = this.player; // TODO: advanced rolling controls? (aircraft, flight?)
+    this.physics.subjectTo(this.game.gravity);
+    this.physics.blocksCreation = true;
+  }
 
-  this.game.control(this.physics);
+  if (this.game.control) {
+    this.game.control(this.physics);
+  }
 
-  this.pointerStream = new PointerStream({shell:this.shell});
-  this.pointerStream.pipe(this.game.controls.createWriteRotationStream());
+
+  if (this.game.controls) {
+    this.pointerStream = new PointerStream({shell:this.shell});
+    this.pointerStream.pipe(this.game.controls.createWriteRotationStream());
+  }
 };
 
 CameraPlugin.prototype.disable = function() {
